@@ -10,5 +10,5 @@ Recommended Variables:
 | Variable | Default | Value | Descrption |
 | --- | --- | --- | --- |
 | CONFIG_DIR | config | the config dir | The sub dir of the config |
-| TWITCH_BOT_USERNAME | Name | 715209 | We recommend using your main Twitch BOT account for this, but if you do not have a Twitch Bot account just use your Main Twitch Account. |
-| TWITCH_BOT_OAUTH | oauth:YOUR_OAUTH_HERE | Use https://twitchapps.com/tmi to get your oauth from Twitch. |
+| TWITCH_BOT_USERNAME |  - | botname | We recommend using your main Twitch BOT account for this, but if you do not have a Twitch Bot account just use your Main Twitch Account. |
+| TWITCH_BOT_OAUTH | - | oauth:YOUR_OAUTH_HERE | Use https://twitchapps.com/tmi to get your oauth from Twitch. |
