@@ -56,4 +56,4 @@ jobs:
       uses: docker/build-push-action@v3
       with:
         push: true
-        tags: dersni/docker-NOALBS:${{steps.remote_version.outputs.tag_name}}-${{ github.run_number }}, dersni/docker-NOALBS:latest
+        tags: dersni/docker-noalbs:${{steps.remote_version.outputs.tag_name}}-${{ github.run_number }}, dersni/docker-noalbs:latest
