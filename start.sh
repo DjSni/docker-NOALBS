@@ -18,7 +18,7 @@ else
   chown -R ${USER}:${GROUP} /app/
 fi
 
-if [ ! -f "/app/${CONFIG_DIR}/config.default" || ! -f "/app/${CONFIG_DIR}/config.json" ]
+if [[ ! -f "/app/${CONFIG_DIR}/config.default" || ! -f "/app/${CONFIG_DIR}/config.json" ]]
 then
   echo "Coping the default config, please edit it an rename it to 'config.json'."
   cp /app/default/config.default /app/${CONFIG_DIR}/
