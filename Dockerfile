@@ -8,11 +8,13 @@ RUN curl -s https://api.github.com/repos/715209/nginx-obs-automatic-low-bitrate-
     | cut -d : -f 2,3 | tr -d \"| wget -qi - \
     && tar xfvz noalbs-v*.tar.gz -C / \
     && rm noalbs-v*-x86_64-unknown-linux-musl.tar.gz \
-    && mv /noalbs-v* /app && rm /app/.env && rm /app/config.json
-RUN ls -las /
-RUN ls -las /app
+    && mv /noalbs-v* /app \
+    && mkdir /app/default \
+    && mv /app/config.json /app/default/config.default \
+    && rm /app/.env
 
-#COPY /app /app
+#Test "
+COPY start.sh /
 
 # Start by default
-CMD ["/app/noalbs"]
+CMD ["/start.sh"]
