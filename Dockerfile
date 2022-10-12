@@ -16,5 +16,7 @@ RUN curl -s https://api.github.com/repos/715209/nginx-obs-automatic-low-bitrate-
 #Test "
 COPY start.sh /
 
+WORKDIR /app
+
 # Start by default
 CMD ["/start.sh"]
