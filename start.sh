@@ -25,5 +25,5 @@ then
   exit 1
 fi
 
-echo "Starting pCloud Daemon"
+echo "Starting NOALBS Daemon"
 exec /app/noalbs
