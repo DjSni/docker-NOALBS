@@ -27,17 +27,6 @@ jobs:
     - name: Commit if not the same
       if: ${{ steps.remote_version.outputs.tag_name != env.SAVED_RELEASE_VERSION }}
       run: echo "${{ steps.remote_version.outputs.tag_name }}" > dependencies/noalbs-version
-    - name: Commit changes an push it to remote
-      if: ${{ steps.remote_version.outputs.tag_name != env.SAVED_RELEASE_VERSION }}
-      uses: actions-x/commit@v6
-      with:
-        email: 41898282+github-actions[bot]@users.noreply.github.com
-        name: GitHub Actions
-        branch: main
-        files: dependencies/noalbs-version
-        repository: https://github.com/DjSni/docker-NOALBS
-        token: ${{ secrets.GITHUB_TOKEN }}
-        force: false
 # Build the new way (Docker) 
     - name: Set up QEMU
       if: ${{ steps.remote_version.outputs.tag_name != env.SAVED_RELEASE_VERSION }}
@@ -57,3 +46,15 @@ jobs:
       with:
         push: true
         tags: dersni/docker-noalbs:${{steps.remote_version.outputs.tag_name}}-${{ github.run_number }}, dersni/docker-noalbs:latest
+# commit
+    - name: Commit changes an push it to remote
+      if: ${{ steps.remote_version.outputs.tag_name != env.SAVED_RELEASE_VERSION }}
+      uses: actions-x/commit@v6
+      with:
+        email: 41898282+github-actions[bot]@users.noreply.github.com
+        name: GitHub Actions
+        branch: main
+        files: dependencies/noalbs-version
+        repository: https://github.com/DjSni/docker-NOALBS
+        token: ${{ secrets.GITHUB_TOKEN }}
+        force: false
