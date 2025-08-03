@@ -19,10 +19,10 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
     - name: Set ENV variable
-      run: echo "SAVED_RELEASE_VERSION=$(cat dependencies/noalbs-version)" >> $GITHUB_ENV
+      run: echo "SAVED_RELEASE_VERSION=$(cat dependencies/noalbs-version)" >> $GITHUB_ENV  
     - name: Get the remote version
       id: remote_version
-      uses: gregziegan/fetch-latest-release@v2.0.0
+      uses: cityoflosangeles/fetch-latest-github-release@v3
       with:
         repo_path: "715209/nginx-obs-automatic-low-bitrate-switching"
         github_token: ${{ github.token }}
