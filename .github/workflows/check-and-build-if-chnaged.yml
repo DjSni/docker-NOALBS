@@ -48,7 +48,7 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
     - name: Build and push
       if: ${{ steps.remote_version.outputs.tag_name != env.SAVED_RELEASE_VERSION }}
-      uses: docker/build-push-action@v3
+      uses: docker/build-push-action@v6
       with:
         push: true
         tags: dersni/docker-noalbs:${{steps.remote_version.outputs.tag_name}}-${{ github.run_number }}, dersni/docker-noalbs:latest
