@@ -36,7 +36,7 @@ jobs:
 # Build the new way (Docker) 
     - name: Set up QEMU
       if: ${{ steps.remote_version.outputs.tag_name != env.SAVED_RELEASE_VERSION }}
-      uses: docker/setup-qemu-action@v2
+      uses: docker/setup-qemu-action@v3
     - name: Set up Docker Buildx
       if: ${{ steps.remote_version.outputs.tag_name != env.SAVED_RELEASE_VERSION }}
       uses: docker/setup-buildx-action@v2
