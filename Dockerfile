@@ -1,4 +1,4 @@
-FROM ubuntu:jammy
+FROM ubuntu:noble
 ENV DEBIAN_FRONTEND="noninteractive" TZ="Europe/Berlin"
 #ENV REPO="715209/nginx-obs-automatic-low-bitrate-switching"
 #ENV VERSION=$(wget -q -O- https://api.github.com/repos/${REPO}/releases/latest | jq -r '.name')
