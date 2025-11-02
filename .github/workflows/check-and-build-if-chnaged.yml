@@ -35,17 +35,23 @@ jobs:
       run: echo "${{ steps.remote_version.outputs.tag_name }}" > dependencies/noalbs-version
 # Build the new way (Docker) 
     - name: Set up QEMU
-      if: ${{ steps.remote_version.outputs.tag_name != env.SAVED_RELEASE_VERSION }}
+      if: ${{ steps.remote_version.outputs.tag_name != env.SAVED_RELEASE_VERSION || github.event_name == 'pull_request' }}
       uses: docker/setup-qemu-action@v3
     - name: Set up Docker Buildx
-      if: ${{ steps.remote_version.outputs.tag_name != env.SAVED_RELEASE_VERSION }}
+      if: ${{ steps.remote_version.outputs.tag_name != env.SAVED_RELEASE_VERSION || github.event_name == 'pull_request' }}
       uses: docker/setup-buildx-action@v3
     - name: Login to DockerHub
-      if: ${{ steps.remote_version.outputs.tag_name != env.SAVED_RELEASE_VERSION }}
+      if: ${{ steps.remote_version.outputs.tag_name != env.SAVED_RELEASE_VERSION || github.event_name == 'pull_request' }}
       uses: docker/login-action@v3
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
+    - name: Build on pull request
+      if: ${{ github.event_name == 'pull_request' }}
+      uses: docker/build-push-action@v6
+      with:
+        push: false
+        tags: dersni/docker-noalbs:${{steps.remote_version.outputs.tag_name}}-${{ github.run_number }}, dersni/docker-noalbs:latest
     - name: Build and push
       if: ${{ steps.remote_version.outputs.tag_name != env.SAVED_RELEASE_VERSION }}
       uses: docker/build-push-action@v6
