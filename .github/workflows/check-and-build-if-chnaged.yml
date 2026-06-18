@@ -48,13 +48,13 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
     - name: Build on pull request
       if: ${{ github.event_name == 'pull_request' }}
-      uses: docker/build-push-action@v6
+      uses: docker/build-push-action@v7
       with:
         push: false
         tags: dersni/docker-noalbs:${{steps.remote_version.outputs.tag_name}}-${{ github.run_number }}, dersni/docker-noalbs:latest
     - name: Build and push
       if: ${{ steps.remote_version.outputs.tag_name != env.SAVED_RELEASE_VERSION }}
-      uses: docker/build-push-action@v6
+      uses: docker/build-push-action@v7
       with:
         push: true
         tags: dersni/docker-noalbs:${{steps.remote_version.outputs.tag_name}}-${{ github.run_number }}, dersni/docker-noalbs:latest
