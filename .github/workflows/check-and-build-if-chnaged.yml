@@ -53,14 +53,14 @@ jobs:
         push: false
         tags: dersni/docker-noalbs:${{steps.remote_version.outputs.tag_name}}-${{ github.run_number }}, dersni/docker-noalbs:latest
     - name: Build and push
-      if: ${{ steps.remote_version.outputs.tag_name != env.SAVED_RELEASE_VERSION }}
+      if: ${{ github.event_name == 'pull_request' && steps.remote_version.outputs.tag_name != env.SAVED_RELEASE_VERSION }}
       uses: docker/build-push-action@v7
       with:
         push: true
         tags: dersni/docker-noalbs:${{steps.remote_version.outputs.tag_name}}-${{ github.run_number }}, dersni/docker-noalbs:latest
 # commit
     - name: Commit changes an push it to remote
-      if: ${{ steps.remote_version.outputs.tag_name != env.SAVED_RELEASE_VERSION }}
+      if: ${{ github.event_name == 'pull_request' && steps.remote_version.outputs.tag_name != env.SAVED_RELEASE_VERSION }}
       uses: actions-x/commit@v6
       with:
         email: 41898282+github-actions[bot]@users.noreply.github.com
