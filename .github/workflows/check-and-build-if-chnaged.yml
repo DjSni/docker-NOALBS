@@ -24,26 +24,37 @@ jobs:
       with:
         repo_path: "715209/nginx-obs-automatic-low-bitrate-switching"
         github_token: ${{ github.token }}
-    - name: Set ENV variable
+    - name: Set ENVs variable
+      id: version_step
       run: |
         echo "SAVED_RELEASE_VERSION=$(cat dependencies/noalbs-version)" >> $GITHUB_ENV
         echo "RELEASE_VERSION=${{ steps.remote_version.outputs.tag_name }}" >> $GITHUB_ENV
+        # Ursprüngliche Version definieren
+        VERSION="${{ env.RELEASE_VERSION }}"
+        # Das führende 'v' entfernen, falls vorhanden
+        CLEAN_VERSION="${VERSION#v}"
+        # Am Punkt (.) aufteilen
+        IFS='.' read -r MAJOR MINOR PATCH <<< "$CLEAN_VERSION"    
+        # Werte in die GitHub-Ausgabe (Outputs) schreiben
+        echo "MAJOR=$MAJOR" >> $GITHUB_ENV
+        echo "MINOR=$MINOR" >> $GITHUB_ENV
+        echo "PATCH=$PATCH" >> $GITHUB_ENV
     - name: Echo the saved version
       run: echo ${{ env.SAVED_RELEASE_VERSION }}
     - name: The remote Version
-      run: echo ${{ steps.remote_version.outputs.tag_name }}
+      run: echo ${{ env.RELEASE_VERSION }}
     - name: Commit if not the same
-      if: ${{ steps.remote_version.outputs.tag_name != env.SAVED_RELEASE_VERSION }}
-      run: echo "${{ steps.remote_version.outputs.tag_name }}" > dependencies/noalbs-version
+      if: ${{ env.RELEASE_VERSION != env.SAVED_RELEASE_VERSION }}
+      run: echo "${{ env.RELEASE_VERSION }}" > dependencies/noalbs-version
 # Build the new way (Docker) 
     - name: Set up QEMU
-      if: ${{ steps.remote_version.outputs.tag_name != env.SAVED_RELEASE_VERSION || github.event_name == 'pull_request' }}
+      if: ${{ env.RELEASE_VERSION != env.SAVED_RELEASE_VERSION || github.event_name == 'pull_request' }}
       uses: docker/setup-qemu-action@v4
     - name: Set up Docker Buildx
-      if: ${{ steps.remote_version.outputs.tag_name != env.SAVED_RELEASE_VERSION || github.event_name == 'pull_request' }}
+      if: ${{ env.RELEASE_VERSION != env.SAVED_RELEASE_VERSION || github.event_name == 'pull_request' }}
       uses: docker/setup-buildx-action@v4
     - name: Login to DockerHub
-      if: ${{ steps.remote_version.outputs.tag_name != env.SAVED_RELEASE_VERSION || github.event_name == 'pull_request' }}
+      if: ${{ env.RELEASE_VERSION != env.SAVED_RELEASE_VERSION || github.event_name == 'pull_request' }}
       uses: docker/login-action@v4
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
@@ -53,16 +64,26 @@ jobs:
       uses: docker/build-push-action@v7
       with:
         push: false
-        tags: dersni/docker-noalbs:${{steps.remote_version.outputs.tag_name}}-${{ github.run_number }}, dersni/docker-noalbs:latest
+        tags: |
+          dersni/docker-noalbs:latest,
+          dersni/docker-noalbs:v${{ env.MAJOR }},
+          dersni/docker-noalbs:v${{ env.MAJOR }}.${{ env.MINOR }},
+          dersni/docker-noalbs:v${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }},
+          dersni/docker-noalbs:v${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}-${{ github.run_number }}
     - name: Build and push
-      if: ${{ steps.remote_version.outputs.tag_name != env.SAVED_RELEASE_VERSION && github.event_name != 'pull_request' }}
+      if: ${{ env.RELEASE_VERSION != env.SAVED_RELEASE_VERSION && github.event_name != 'pull_request' }}
       uses: docker/build-push-action@v7
       with:
         push: true
-        tags: dersni/docker-noalbs:${{steps.remote_version.outputs.tag_name}}-${{ github.run_number }}, dersni/docker-noalbs:latest
+        tags: |
+          dersni/docker-noalbs:latest,
+          dersni/docker-noalbs:v${{ env.MAJOR }},
+          dersni/docker-noalbs:v${{ env.MAJOR }}.${{ env.MINOR }},
+          dersni/docker-noalbs:v${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }},
+          dersni/docker-noalbs:v${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}-${{ github.run_number }}
 # commit
     - name: Commit changes an push it to remote
-      if: ${{ steps.remote_version.outputs.tag_name != env.SAVED_RELEASE_VERSION && github.event_name != 'pull_request' }}
+      if: ${{ env.RELEASE_VERSION != env.SAVED_RELEASE_VERSION && github.event_name != 'pull_request' }}
       uses: actions-x/commit@v6
       with:
         email: 41898282+github-actions[bot]@users.noreply.github.com
