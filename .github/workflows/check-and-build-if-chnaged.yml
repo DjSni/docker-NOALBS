@@ -25,10 +25,12 @@ jobs:
         repo_path: "715209/nginx-obs-automatic-low-bitrate-switching"
         github_token: ${{ github.token }}
     - name: Set ENVs variable
-      id: version_step
       run: |
         echo "SAVED_RELEASE_VERSION=$(cat dependencies/noalbs-version)" >> $GITHUB_ENV
         echo "RELEASE_VERSION=${{ steps.remote_version.outputs.tag_name }}" >> $GITHUB_ENV
+    - name: Set vers ENVs
+      id: version_step
+      run: |
         # Ursprüngliche Version definieren
         VERSION=${{ env.RELEASE_VERSION }}
         # Das führende 'v' entfernen, falls vorhanden
